@@ -8,22 +8,28 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "user")                
-@EqualsAndHashCode(exclude = "user")    
-@Table
+@ToString(exclude = "user")
+@EqualsAndHashCode(exclude = "user")
+@Table(name = "education_qualification")
 public class EducationQualification extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    private String degree;         
-    private String stream;         
-    private String university;     
-    private String grade;          
-    private int passingYear;       
+    @Column(name = "degree", nullable = false, length = 100)
+    private String degree;
+
+    @Column(name = "stream", nullable = false, length = 100)
+    private String stream;
+
+    @Column(name = "university", nullable = false, length = 255)
+    private String university;
+
+    @Column(name = "grade", nullable = true, length = 50)
+    private String grade;
+
+    @Column(name = "passing_year", nullable = false)
+    private int passingYear;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")  // FK in education table, referencing UserEntity
+    @JoinColumn(name = "user_id", nullable = false)  // FK column in education table
     private UserEntity user;
 }

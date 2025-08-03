@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.seeker.enums.Role;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,14 +20,11 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "register")
-public class UserEntity implements UserDetails {
+public class UserEntity extends BaseEntity implements UserDetails{
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "user_id")
-	private Long userId;
 
 	@Column(name = "email", nullable = false, unique = true)
+	@Email
 	private String email;
 
 	@Column(name = "password", nullable = false)
@@ -35,14 +33,6 @@ public class UserEntity implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "role", nullable = false)
 	private Role role;
-
-	@Column(name = "created_at", nullable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date createdAt;
-
-	@Column(name = "updated_at", nullable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date updatedAt;
 
 	// ---------- UserDetails methods ----------
 	@Override
