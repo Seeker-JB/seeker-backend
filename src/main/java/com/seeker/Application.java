@@ -1,11 +1,16 @@
 package com.seeker;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import com.cloudinary.Cloudinary;
 
 @SpringBootApplication // includes @Configuration
 public class Application {
@@ -36,6 +41,20 @@ public class Application {
 				.setPropertyCondition(Conditions.isNotNull());// use case - PUT
 		return mapper;
 
+	}
+	
+	
+	@Bean
+	 Cloudinary getCloudinary() {
+		
+		Map config = new HashMap();
+		
+		config.put("cloud_name", "dmjqbvrtd");
+		config.put("api_key", "559336967177573");
+		config.put("api_secret", "6sZjTPlRX4Uhy2gZeRBsr_meTrQ");
+		config.put("secure", true);
+		
+		return new Cloudinary(config);
 	}
 
 }

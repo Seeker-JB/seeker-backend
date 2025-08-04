@@ -34,7 +34,13 @@ public class BusinessProfile extends BaseEntity {
     @NotBlank(message = "Address is required")
     private String address;
 
+    
+    @Column(name = "logo_url")
+    private String logoUrl;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
+    
+    
 }

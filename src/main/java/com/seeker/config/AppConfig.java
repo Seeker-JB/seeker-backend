@@ -6,6 +6,8 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.cloudinary.Cloudinary;
+
 public class AppConfig {
 
 	@Bean 
@@ -17,4 +19,7 @@ public class AppConfig {
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception{
 		return builder.getAuthenticationManager();
 	}
+	
+	
+	
 }
