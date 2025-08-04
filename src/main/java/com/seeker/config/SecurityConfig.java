@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -13,6 +14,7 @@ import com.seeker.security.JwtAuthenticationEntryPoint;
 import com.seeker.security.JwtAuthenticationFilter;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 	
 	@Autowired
@@ -28,7 +30,7 @@ public class SecurityConfig {
 		.authorizeHttpRequests(auth -> auth
 		        .requestMatchers("/test").authenticated()
 		        .requestMatchers("/auth/login").permitAll()
-		        .anyRequest().authenticated()
+		        .anyRequest().permitAll()
 		    )
 		.exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
 		.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

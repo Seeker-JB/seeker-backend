@@ -11,6 +11,8 @@ import lombok.Setter;
 @Data
 public class JwtResponseDto {
  
+	private boolean success;
+	
 	private String jwtToken;
 	
 	private String email;
