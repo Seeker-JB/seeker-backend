@@ -39,7 +39,7 @@ public class BusinessProfile extends BaseEntity {
     private String logoUrl;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", unique = true , nullable = false)
     private UserEntity user;
     
     

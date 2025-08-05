@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException.Unauthorized;
 
+import com.seeker.OwnExceptions.AlreadyExistsException;
 import com.seeker.OwnExceptions.ResourceNotFoundException;
 import com.seeker.OwnExceptions.UnauthorizedException;
+import com.seeker.dtos.ApiResponse;
 import com.seeker.dtos.UnSuccessfullDto;
 
 @RestControllerAdvice
@@ -37,4 +39,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException ex){
     	return ResponseEntity.status(HttpStatus.SC_CONFLICT).body(new UnSuccessfullDto(false, ex.getMessage()));
     }
+    
+    
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity<ApiResponse> handleAlreadyExists(AlreadyExistsException ex) {
+        ApiResponse response = new ApiResponse(false, ex.getMessage());
+        return  ResponseEntity.status(HttpStatus.SC_CONFLICT).body(response);
+    }
+
 }

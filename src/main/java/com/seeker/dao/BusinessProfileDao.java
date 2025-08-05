@@ -13,6 +13,8 @@ public interface BusinessProfileDao extends JpaRepository<BusinessProfile, Long>
 	
 	
 	Optional<BusinessProfile> findByUser(UserEntity user);
+
+	boolean existsByUser(UserEntity user);
 	
 
 }

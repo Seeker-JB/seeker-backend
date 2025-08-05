@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.seeker.OwnExceptions.AlreadyExistsException;
 import com.seeker.dao.UserDao;
 import com.seeker.dtos.BusinessProfileRequestDTO;
 import com.seeker.dtos.BusinessProfileResponseDTO;
@@ -45,6 +46,9 @@ public class BusinessProfileController {
 	@PostMapping("/business-profile")
 	public ResponseEntity<?> createBusinessProfile(@Valid @ModelAttribute BusinessProfileRequestDTO dto) {
 		
+		
+		
+
 		BusinessProfileResponseDTO response = businessService.addBusinessProfile(dto);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -56,18 +60,8 @@ public class BusinessProfileController {
 	
 	@GetMapping("/business-profile")
 	public ResponseEntity<?> getBusinessProfileForCurrentUser() {
-		Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		
-		if (!(principle instanceof UserEntity user)) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new UnSuccessfullDto(false, "Could'nt fetch user"));
-	
-		}
-		
-		
-
-	    BusinessProfileResponseDTO dto = businessService.getBusinessProfileByUser(user);
+	    BusinessProfileResponseDTO dto = businessService.getBusinessProfileByUser();
 	    return ResponseEntity.ok(dto);
 	}
 	
@@ -77,16 +71,8 @@ public class BusinessProfileController {
 	public ResponseEntity<?> updateBusinessProfile( @Valid
 			@ModelAttribute BusinessProfileRequestDTO dto) {
 
-	    // Get the authenticated user from SecurityContext
-	    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	    
-	    if (!(principal instanceof UserEntity user)) {
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-	                             .body(new UnSuccessfullDto(false, "Could'nt fetch user"));
-	    }
-
-	    // Pass UserEntity to service layer for update (if needed)
-	    businessService.updateBusinessProfile(dto, user); // or user.getId() if needed
+	  
+	    businessService.updateBusinessProfile(dto); // or user.getId() if needed
 
 	    return ResponseEntity.ok(new CreationSuccessDto(true, "Business Profile was updated successfully"));
 	}
@@ -95,16 +81,8 @@ public class BusinessProfileController {
 	
 	@DeleteMapping("/business-profile")
 	public ResponseEntity<?> deleteBusinessProfile() {
-	    // Get the current authenticated user from SecurityContext
-	    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-	    if (!(principal instanceof UserEntity user)) {
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-	                .body(new UnSuccessfullDto(false, "Could'nt fetch user"));
-	    }
-
-	    // Delete business profile for this user
-	    businessService.deleteBusinessProfileByUser(user);
+	    businessService.deleteBusinessProfileByUser();
 
 	    return ResponseEntity.ok(new CreationSuccessDto(true, "Business Profile deleted successfully"));
 	}

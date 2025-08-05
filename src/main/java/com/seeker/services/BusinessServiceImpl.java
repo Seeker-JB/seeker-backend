@@ -1,23 +1,20 @@
 package com.seeker.services;
 
-import java.util.Map;
-import java.util.Optional;
-
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.seeker.custom_exceptions.ResourceNotFoundException;
+import com.seeker.OwnExceptions.AlreadyExistsException;
+import com.seeker.OwnExceptions.ResourceNotFoundException;
 import com.seeker.dao.BusinessProfileDao;
 import com.seeker.dao.UserDao;
 import com.seeker.dtos.BusinessProfileRequestDTO;
 import com.seeker.dtos.BusinessProfileResponseDTO;
-
 import com.seeker.models.BusinessProfile;
 import com.seeker.models.UserEntity;
+import com.seeker.security.AuthenticatedUserProvider;
 
 import lombok.AllArgsConstructor;
 
@@ -35,19 +32,18 @@ public class BusinessServiceImpl implements BusinessService {
 	private CloudinaryImageService cloud;
 	
 	
+	private AuthenticatedUserProvider auth;
+	
+	
     @Override
 	public BusinessProfileResponseDTO addBusinessProfile(BusinessProfileRequestDTO dto) {
 
-		Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String email = null;
 		
-		if (principle instanceof UserEntity user) {
-//			UserEntity user = (UserEntity) principle;
-			email = user.getEmail();
+		
+		UserEntity user = auth.getCurrentUser();
+		if (businessProfileDao.existsByUser(user)) {
+		    throw new AlreadyExistsException("Business profile already exists for this user.");
 		}
-		
-		UserEntity user = userDao.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
 		BusinessProfile profile = modelMapper.map(dto, BusinessProfile.class);
 
 		profile.setUser(user);
@@ -65,21 +61,21 @@ public class BusinessServiceImpl implements BusinessService {
 	}
 
 	@Override
-	public BusinessProfileResponseDTO getBusinessProfileByUser(UserEntity user) {
+	public BusinessProfileResponseDTO getBusinessProfileByUser() {
 		
-		
+		UserEntity user = auth.getCurrentUser();
 		BusinessProfile business = businessProfileDao.findByUser(user).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 		
 		return  modelMapper.map(business, BusinessProfileResponseDTO.class);
 	}
 
 	@Override
-	public BusinessProfileResponseDTO updateBusinessProfile(BusinessProfileRequestDTO dto, UserEntity user) {
+	public BusinessProfileResponseDTO updateBusinessProfile(BusinessProfileRequestDTO dto) {
 		
 
-		
+			UserEntity user = auth.getCurrentUser();
 
-		BusinessProfile existingProfile = businessProfileDao.findByUser(user).orElseThrow(() -> new ResourceNotFoundException("Business profile not found for Current User "));
+		   BusinessProfile existingProfile = businessProfileDao.findByUser(user).orElseThrow(() -> new ResourceNotFoundException("Business profile not found for Current User "));
 
 		    // Update fields from DTO to entity (manual or using ModelMapper)
 		    modelMapper.map(dto, existingProfile);
@@ -92,7 +88,9 @@ public class BusinessServiceImpl implements BusinessService {
 	}
 
 	@Override
-	public void deleteBusinessProfileByUser(UserEntity user) {
+	public void deleteBusinessProfileByUser() {
+		
+		UserEntity user = auth.getCurrentUser();
 		BusinessProfile profile = businessProfileDao.findByUser(user)
 		        .orElseThrow(() -> new ResourceNotFoundException("Business profile not found"));
 

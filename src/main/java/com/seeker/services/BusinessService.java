@@ -9,11 +9,11 @@ public interface BusinessService {
 
 	public BusinessProfileResponseDTO addBusinessProfile(BusinessProfileRequestDTO dto);
 
-	public BusinessProfileResponseDTO getBusinessProfileByUser(UserEntity user);
+	public BusinessProfileResponseDTO getBusinessProfileByUser();
 
-	public BusinessProfileResponseDTO updateBusinessProfile(BusinessProfileRequestDTO dto, UserEntity user);
+	public BusinessProfileResponseDTO updateBusinessProfile(BusinessProfileRequestDTO dto);
 
-	public void deleteBusinessProfileByUser(UserEntity user);
+	public void deleteBusinessProfileByUser();
 	
 
 	
