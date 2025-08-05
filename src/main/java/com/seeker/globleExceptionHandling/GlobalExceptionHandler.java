@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.seeker.custom_exceptions.ResourceNotFoundException;
 import com.seeker.dtos.UnSuccessfullDto;
 
 @RestControllerAdvice
@@ -24,5 +25,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleUserNotFound(UsernameNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.SC_NOT_FOUND)
                 .body(new UnSuccessfullDto(false,"email not found ! "));
+    }
+    
+    
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<?> handleResourceNotFound(ResourceNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.SC_NOT_FOUND)
+                .body(new UnSuccessfullDto(false, ex.getMessage()));
     }
 }

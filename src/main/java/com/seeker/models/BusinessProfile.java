@@ -38,7 +38,7 @@ public class BusinessProfile extends BaseEntity {
     @Column(name = "logo_url")
     private String logoUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
     
