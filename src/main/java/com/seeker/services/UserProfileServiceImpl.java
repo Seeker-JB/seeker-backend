@@ -33,46 +33,35 @@ public class UserProfileServiceImpl {
 		UserProfile userProfile = modelMapper.map(userDto, UserProfile.class);
 		UserEntity user = securityContextUserProvider.getCurrentUser();
 
-		try {
-
-			if (userDto.getProfilePicture() != null && !userDto.getProfilePicture().isEmpty()) {
-				String uploadedUrl = cloudinary.upload(userDto.getProfilePicture());
-				userProfile.setProfilePictureUrl(uploadedUrl);
-			}
-			UserProfile saved = userProfileDao.save(userProfile);
-			return "Profile created";
-
-		} catch (Exception ex) {
-
-			throw new RuntimeException("Failed to create user profile: " + ex.getMessage(), ex);
+		if (userDto.getProfilePicture() != null && !userDto.getProfilePicture().isEmpty()) {
+			String uploadedUrl = cloudinary.upload(userDto.getProfilePicture());
+			userProfile.setProfilePictureUrl(uploadedUrl);
 		}
+		UserProfile saved = userProfileDao.save(userProfile);
+		return "Profile created";
+
 	}
 
 	public String updateUserProfile(UserProfileRequestDto userDto) {
 		UserEntity user = securityContextUserProvider.getCurrentUser();
 
 		UserProfile existing = userProfileDao.findByUser(user)
-				.orElseThrow(() -> new ResourceNotFoundException("UserProfile not found for user id"));
+				.orElseThrow(() -> new ResourceNotFoundException("UserProfile not found"));
 
-		try {
-			
-			modelMapper.map(userDto, existing);
+		modelMapper.map(userDto, existing);
 
-			MultipartFile newPic = userDto.getProfilePicture();
-			
-			if (newPic != null && !newPic.isEmpty()) {
-				
-				String uploadedUrl = cloudinary.upload(newPic);
-				existing.setProfilePictureUrl(uploadedUrl);
-			}
+		MultipartFile newPic = userDto.getProfilePicture();
 
-			UserProfile saved = userProfileDao.save(existing);
-			
-			return "Profile updated with id";
-			
-		} catch (Exception ex) {
-			throw new RuntimeException("Failed to update user profile: " + ex.getMessage(), ex);
+		if (newPic != null && !newPic.isEmpty()) {
+
+			String uploadedUrl = cloudinary.upload(newPic);
+			existing.setProfilePictureUrl(uploadedUrl);
 		}
+
+		UserProfile saved = userProfileDao.save(existing);
+
+		return "Profile updated with id";
+
 	}
 
 }
