@@ -1,5 +1,7 @@
 package com.seeker.models;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
@@ -18,6 +20,10 @@ public class JobPost extends BaseEntity {
     @Column(name = "title", nullable = false, length = 255)
     @NotBlank(message = "Title is required")
     private String title;
+    
+    @Column(name = "description", nullable = false, length = 2000)
+    @NotBlank(message = "Description is required")
+    private String description;
 
     @Column(name = "company_name", nullable = false, length = 255)
     @NotBlank(message = "Company name is required")
@@ -34,12 +40,34 @@ public class JobPost extends BaseEntity {
 
     @Column(name = "technology", length = 255)
     private String technology;
+    
+    
+    @OneToMany(mappedBy = "post",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<JobApplication> jobApplications;
 
-    @Column(name = "description", nullable = false, length = 2000)
-    @NotBlank(message = "Description is required")
-    private String description;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false) // foreign key column in job_post table
     private UserEntity user;
+    
+    
+    
+    public void addJobApplication(JobApplication application) {
+        jobApplications.add(application);
+        application.setJobPost(this);
+    }
+
+    // ✅ Helper Method - Remove Application
+    public void removeJobApplication(JobApplication application) {
+        jobApplications.remove(application);
+        application.setJobPost(null);
+    }
 }
+
+
+
+
+

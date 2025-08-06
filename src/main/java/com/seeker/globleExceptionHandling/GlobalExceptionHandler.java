@@ -46,5 +46,8 @@ public class GlobalExceptionHandler {
         ApiResponse response = new ApiResponse(false, ex.getMessage());
         return  ResponseEntity.status(HttpStatus.SC_CONFLICT).body(response);
     }
+    
+    
+    
 
 }

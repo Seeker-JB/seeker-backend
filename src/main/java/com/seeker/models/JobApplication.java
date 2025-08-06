@@ -26,12 +26,12 @@ public class JobApplication extends BaseEntity {
     
     //review this , can be converted to aws s3 link or server side resume storage
 
-//    @Column(length = 2000)
-//    private String resumeText;
+    @Column(name="resume_url",length = 2000)
+    private String resumeUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_post_id", nullable = false)
-    private JobPost jobPost;;
+    private JobPost jobPost;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
