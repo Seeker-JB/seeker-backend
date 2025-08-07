@@ -24,7 +24,7 @@ public class LikeServiceImpl implements LikeService {
 	private PostDao postDao;
 	private AuthenticatedUserProvider securityUserProvider;
 
-	public String doLike(Long postId) {
+	public String doLikeDislike(Long postId) {
 
 		UserEntity user = securityUserProvider.getCurrentUser();
 
@@ -35,13 +35,14 @@ public class LikeServiceImpl implements LikeService {
 
 		if (checkLike.isPresent()) {
 			likeDao.delete(checkLike.get());
-			return "Dislike liked";
+			return "Dislike successfull";
 		} else {
+			
 			Like like = new Like();
 			like.setUser(user);
 			like.setPost(post);
 			likeDao.save(like);
-			return "Liked successfully";
+			return "Like successfull";
 		}
 	}
 }
