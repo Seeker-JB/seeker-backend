@@ -37,7 +37,7 @@ public class JobPostServiceImpl implements JobPostService {
 
 	@Override
 
-	public void createJobPost(@Valid JobPostRequestDTO requestDTO) {
+	public String createJobPost(@Valid JobPostRequestDTO requestDTO) {
 
 		UserEntity user = aup.getCurrentUser();
 
@@ -46,25 +46,27 @@ public class JobPostServiceImpl implements JobPostService {
 		jobpost.setUser(user);
 
 		jobPostDao.save(jobpost);
+		
+		return "Posted Successfull";
 
 	}
 
-	@Override
-	public List<JobPostResponseDTO> getJobPostsForCurrentUser() {
-		UserEntity user = aup.getCurrentUser();
-
-		List<JobPost> jobPosts = jobPostDao.findByUser(user);
-
-		List<JobPostResponseDTO> dtos = jobPosts.stream().map(jb -> {
-			// Map base fields
-			JobPostResponseDTO dto = modelMapper.map(jb, JobPostResponseDTO.class);
-
-			dto.setUserId(user.getId());
-
-			return dto;
-		}).collect(Collectors.toList());
-		return dtos;
-	}
+//	@Override
+//	public List<JobPostResponseDTO> getJobPostsForCurrentUser() {
+//		UserEntity user = aup.getCurrentUser();
+//
+//		List<JobPost> jobPosts = jobPostDao.findByUser(user);
+//
+//		List<JobPostResponseDTO> dtos = jobPosts.stream().map(jb -> {
+//			// Map base fields
+//			JobPostResponseDTO dto = modelMapper.map(jb, JobPostResponseDTO.class);
+//
+//			dto.setUserId(user.getId());
+//
+//			return dto;
+//		}).collect(Collectors.toList());
+//		return dtos;
+//	}
 
 	@Override
 	public List<JobPostResponseDTO> getJobPostsByUserId(Long userId) {
@@ -94,7 +96,8 @@ public class JobPostServiceImpl implements JobPostService {
 	}
 
 	@Override
-	public JobPostResponseDTO updateJobPost(Long id, @Valid JobPostRequestDTO requestDTO) {
+	public String updateJobPost(Long id, @Valid JobPostRequestDTO requestDTO) {
+		
 		JobPost existing = jobPostDao.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Job post not found with id: " + id));
 
@@ -103,21 +106,15 @@ public class JobPostServiceImpl implements JobPostService {
 			throw new UnauthorizedException("You are not allowed to update this job post");
 		}
 
-		// Map the requestDTO onto the existing JobPost entity
 		modelMapper.map(requestDTO, existing);
 
-		// Save the updated entity
 		JobPost jb = jobPostDao.save(existing);
 
-		JobPostResponseDTO dto = modelMapper.map(jb, JobPostResponseDTO.class);
-
-		dto.setUserId(jb.getUser().getId());
-
-		return dto;
+		return "Update Successfull";
 	}
 
 	@Override
-	public void deleteJobPost(Long id) {
+	public String deleteJobPost(Long id) {
 		JobPost existing = jobPostDao.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Job post not found with id: " + id));
 
@@ -127,6 +124,8 @@ public class JobPostServiceImpl implements JobPostService {
 		}
 
 		jobPostDao.delete(existing);
+		
+		return "Delete Successfull";
 	}
 
 }

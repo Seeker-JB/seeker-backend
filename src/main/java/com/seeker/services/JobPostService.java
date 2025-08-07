@@ -10,18 +10,18 @@ import jakarta.validation.Valid;
 
 public interface JobPostService {
 
-	void createJobPost(@Valid JobPostRequestDTO requestDTO);
+	String createJobPost(@Valid JobPostRequestDTO requestDTO);
 
-
-	List<JobPostResponseDTO> getJobPostsForCurrentUser();
+//
+//	List<JobPostResponseDTO> getJobPostsForCurrentUser();
 
 	List<JobPostResponseDTO> getJobPostsByUserId(Long userId);
 
 	JobPostResponseDTO getJobPostById(Long id);
 
-	JobPostResponseDTO updateJobPost(Long id, @Valid JobPostRequestDTO requestDTO);
+	String updateJobPost(Long id, @Valid JobPostRequestDTO requestDTO);
 
-	void deleteJobPost(Long id);
+	String deleteJobPost(Long id);
 	
 	
 	

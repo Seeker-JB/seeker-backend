@@ -1,6 +1,7 @@
 package com.seeker.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,9 +31,9 @@ public class PostController {
 		return ResponseEntity.ok().body(new ApiResponse(true,response));
 	}
 	
-	@PutMapping("/update")
-	public ResponseEntity<ApiResponse> updatePost(@Valid @ModelAttribute PostRequestDto postDto){
-		String response = postService.updatePost(postDto);
+	@PutMapping("/update/{postId}")
+	public ResponseEntity<ApiResponse> updatePost(@PathVariable Long postId, @Valid @ModelAttribute PostRequestDto postDto){
+		String response = postService.updatePost(postId, postDto);
 		return ResponseEntity.ok().body(new ApiResponse(true,response));
 	}
 	
@@ -45,5 +46,11 @@ public class PostController {
 	@GetMapping("/getAllPostByUser/{postId}")
 	public ResponseEntity<?> getAllPostByUserId(@PathVariable Long userId){
 		return ResponseEntity.ok().body(postService.getAllPostsWithLikeStatusForCurrentUser(userId));
+	}
+	
+	@DeleteMapping("post/{postId}")
+	public ResponseEntity<?> deleteJobPost(@PathVariable Long postId) {
+		String response = postService.deletePost(postId);
+		return ResponseEntity.ok(new ApiResponse(true, response));
 	}
 }

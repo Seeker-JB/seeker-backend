@@ -25,8 +25,8 @@ public class JobPostController {
 	// Create JobPost
 	@PostMapping("/jobposts")
 	public ResponseEntity<?> createJobPost(@Valid @RequestBody JobPostRequestDTO requestDTO) {
-		jobPostService.createJobPost(requestDTO);
-		return ResponseEntity.ok(new ApiResponse(true, "New Job Post Created"));
+		String response = jobPostService.createJobPost(requestDTO);
+		return ResponseEntity.ok(new ApiResponse(true, response));
 	}
 
 //    // Get all JobPosts
@@ -46,24 +46,24 @@ public class JobPostController {
 		return ResponseEntity.ok(posts);
 	}
 
-//    // Get single JobPost by ID
-//    @GetMapping("/jobpost/{id}")
-//    public ResponseEntity<?> getJobPostById(@PathVariable Long id) {
-//        JobPostResponseDTO post = jobPostService.getJobPostById(id);
-//        return ResponseEntity.ok(post);
-//    }
+    // Get single JobPost by ID
+    @GetMapping("/jobpost/{id}")
+    public ResponseEntity<?> getJobPostById(@PathVariable Long id) {
+        JobPostResponseDTO post = jobPostService.getJobPostById(id);
+        return ResponseEntity.ok(post);
+    }
 
 	// Update JobPost
 	@PutMapping("/jobposts/{id}")
 	public ResponseEntity<?> updateJobPost(@PathVariable Long id, @Valid @RequestBody JobPostRequestDTO requestDTO) {
-		JobPostResponseDTO updated = jobPostService.updateJobPost(id, requestDTO);
-		return ResponseEntity.ok(new ApiResponse(true, "job post updated"));
+		String response = jobPostService.updateJobPost(id, requestDTO);
+		return ResponseEntity.ok(new ApiResponse(true, response));
 	}
 
 	// Delete JobPost
 	@DeleteMapping("jobposts/{id}")
 	public ResponseEntity<?> deleteJobPost(@PathVariable Long id) {
-		jobPostService.deleteJobPost(id);
-		return ResponseEntity.ok(new ApiResponse(true, "job post deleted "));
+		String response = jobPostService.deleteJobPost(id);
+		return ResponseEntity.ok(new ApiResponse(true, response));
 	}
 }
