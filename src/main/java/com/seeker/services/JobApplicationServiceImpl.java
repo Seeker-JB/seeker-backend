@@ -35,45 +35,45 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     private final CloudinaryImageService cloud;
     private final AuthenticatedUserProvider aup;
 
-    
+   
    //Applicant User's Method
     // ✅ Apply to a job post
     @Override
     public JobApplicationResponseDTO applyToJob(Long jobPostId,  JobApplicationRequestDTO dto) {
-    	UserEntity currentUser = aup.getCurrentUser();
+    UserEntity currentUser = aup.getCurrentUser();
 
-    	JobPost jobPost = jobPostDao.findById(jobPostId)
-    	        .orElseThrow(() -> new ResourceNotFoundException("Job post not found"));
+    JobPost jobPost = jobPostDao.findById(jobPostId)
+           .orElseThrow(() -> new ResourceNotFoundException("Job post not found"));
 
-    	// 1. Map DTO → Entity
-    	JobApplication application = modelMapper.map(dto, JobApplication.class);
+    // 1. Map DTO → Entity
+    JobApplication application = modelMapper.map(dto, JobApplication.class);
 
-    	// 2. Handle resume upload
-    	if (dto.getResume() != null && !dto.getResume().isEmpty()) {
-    	    String uploadedUrl = cloud.upload(dto.getResume());
-    	    application.setResumeUrl(uploadedUrl);
-    	}
+    // 2. Handle resume upload
+    if (dto.getResume() != null && !dto.getResume().isEmpty()) {
+       String uploadedUrl = cloud.upload(dto.getResume());
+       application.setResumeUrl(uploadedUrl);
+    }
 
-    	// 3. Set applicant user
-    	application.setUser(currentUser);
+    // 3. Set applicant user
+    application.setUser(currentUser);
 
-    	// ✅ 4. Use helper method to manage the relationship properly
-    	jobPost.addJobApplication(application);
+    // ✅ 4. Use helper method to manage the relationship properly
+    jobPost.addJobApplication(application);
 
-    	// 5. Save through application DAO (or optionally jobPostDao)
-    	JobApplication saved = jobApplicationDao.save(application);
+    // 5. Save through application DAO (or optionally jobPostDao)
+    JobApplication saved = jobApplicationDao.save(application);
 
-    	// 6. Map and return DTO
-    	return modelMapper.map(saved, JobApplicationResponseDTO.class);
+    // 6. Map and return DTO
+    return modelMapper.map(saved, JobApplicationResponseDTO.class);
     }
 
     // ✅ Get all applications submitted by current user
-    
-    
+   
+   
    
 
-    
-    //Business Side's Method 
+   
+    //Business Side's Method
     // ✅ Get all applications for a specific job post (for job owner)
     @Override
     public List<JobApplicationResponseDTO> getApplicationsForJobPost(Long jobPostId) {
@@ -94,19 +94,35 @@ public class JobApplicationServiceImpl implements JobApplicationService {
                 .toList();
     }
 
-    
-    
-    
+   
+   
+   
     @Override
-    public JobApplicationResponseDTO getById(Long id) {
+    public JobApplicationResponseDTO getByApplicationId(Long id) {
         JobApplication application = jobApplicationDao.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Job application not found"));
 
 
         return modelMapper.map(application, JobApplicationResponseDTO.class);
     }
+   
+   
+   
+    @Override
+    public void deleteApplicationByBusiness(Long applicationId) {
+        JobApplication application = jobApplicationDao.findById(applicationId)
+            .orElseThrow(() -> new ResourceNotFoundException("Application not found"));
+
+        JobPost post = application.getJobPost();
+       
+       
+        post.removeJobApplication(application);
+        jobApplicationDao.delete(application);
+    }
 
    
-    
-    
+
+   
+   
+   
 }
