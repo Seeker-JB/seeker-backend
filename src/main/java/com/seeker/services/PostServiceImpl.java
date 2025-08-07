@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.seeker.OwnExceptions.ResourceNotFoundException;
+import com.seeker.OwnExceptions.UnauthorizedException;
 import com.seeker.dao.LikeDao;
 import com.seeker.dao.PostDao;
 import com.seeker.dtos.PostRequestDto;
@@ -47,17 +48,22 @@ public class PostServiceImpl implements PostService {
 		post.setMediaUrl(url);
 
 		postDao.save(post);
-		return "Poste'd Successfull";
+		return "Posted Successfull";
 
 	}
 
-	public String updatePost(PostRequestDto postDto) {
+	public String updatePost(Long postId, PostRequestDto postDto) {
 
 		UserEntity user = securityContextUserProvider.getCurrentUser();
 
-		Post post = postDao.findByUser(user).orElseThrow(() -> new ResourceNotFoundException("Post not Found"));
+		Post existingPost = postDao.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post not Found"));
 
-		modelMapper.map(postDto, post);
+		UserEntity currentUser = securityContextUserProvider.getCurrentUser();
+		if (!existingPost.getUser().getId().equals(currentUser.getId())) {
+			throw new UnauthorizedException("You are not allowed to update this job post");
+		}
+
+		modelMapper.map(postDto, existingPost);
 
 		MultipartFile file = postDto.getMediaImg();
 		String url = null;
@@ -65,20 +71,20 @@ public class PostServiceImpl implements PostService {
 			url = cloudinary.upload(file);
 		}
 
-		post.setMediaUrl(url);
+		existingPost.setMediaUrl(url);
 
-		postDao.save(post); // no need of doing this this can me automaticly done by @Transactional
+		postDao.save(existingPost); // no need of doing this this can me automaticly done by @Transactional
 		return "Posted Successfull";
 
 	}
 
 	public PostResponseDto getPost(Long postId) {
-		Post post = postDao.findById(postId)
-				.orElseThrow(() -> new ResourceNotFoundException("Cannot find post"));
-		
+		Post post = postDao.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Cannot find post"));
+
 		return modelMapper.map(post, PostResponseDto.class);
 	}
-
+	
+	//important  ye tb kam aai ga jb koi user open kre ga kisi profile ke post
 	public List<PostResponseDto> getAllPostsWithLikeStatusForCurrentUser(Long userId) {
 		UserEntity currentUser = securityContextUserProvider.getCurrentUser();
 
@@ -97,6 +103,20 @@ public class PostServiceImpl implements PostService {
 		}
 
 		return responseList;
+	}
+	
+	public String deletePost(Long postId) {
+		
+		Post post = postDao.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Cannot find post"));
+		
+		UserEntity currentUser = securityContextUserProvider.getCurrentUser();
+		if (!post.getUser().getId().equals(currentUser.getId())) {
+			throw new UnauthorizedException("You are not allowed to update this job post");
+		}
+		
+		postDao.delete(post);
+		
+		return "Detele successfull";
 	}
 
 }
