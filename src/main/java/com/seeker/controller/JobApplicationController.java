@@ -29,10 +29,10 @@ public class JobApplicationController {
     }
 
     // ✅ 2. Get all applications made by current authenticated user
-    @GetMapping("/applications/my")
-    public ResponseEntity<List<JobApplicationResponseDTO>> getMyApplications() {
-        return ResponseEntity.ok(jobApplicationService.getApplicationsByCurrentUser());
-    }
+//    @GetMapping("/applications/my")
+//    public ResponseEntity<List<JobApplicationResponseDTO>> getMyApplications() {
+//        return ResponseEntity.ok(jobApplicationService.getApplicationsByCurrentUser());
+//    }
 
     // ✅ 3. Get all applications for a specific job post (Business User)
     @GetMapping("/{jobPostId}/applications")

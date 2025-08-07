@@ -2,10 +2,6 @@ package com.seeker.dtos;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.seeker.enums.Role;
-
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -14,19 +10,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BusinessProfileRequestDTO {
+public class BusinessProfileUpdateDto {
 
 	@NotBlank(message = "Contact email is required")
 	@Email(message = "Invalid email format")
 	private String email;
 	
-	@NotBlank(message = "Password is Required")
-	private String password;
-
-	@NotBlank(message = "Role is Required")
-	@Enumerated(EnumType.STRING)
-	private Role role;
-
 	@NotBlank(message = "Business name is required")
 	private String name;
 

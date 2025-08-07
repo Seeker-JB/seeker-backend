@@ -1,18 +1,14 @@
 package com.seeker.dao;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.seeker.models.Like;
 import com.seeker.models.Post;
 import com.seeker.models.UserEntity;
 
 @Repository
-public interface PostDao extends JpaRepository<Post, Long> {
+public interface LikeDao extends JpaRepository<Like, Long> {
 
-	public Optional<Post> findByUser(UserEntity user);
-	List<Post> findByUser_Id(Long userId);
-
+	boolean existsByUserAndPost(UserEntity user, Post post);
 }

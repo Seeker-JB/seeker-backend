@@ -1,13 +1,12 @@
 package com.seeker.globleExceptionHandling;
 
 import org.apache.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpClientErrorException.Unauthorized;
 
 import com.seeker.OwnExceptions.AlreadyExistsException;
 import com.seeker.OwnExceptions.ResourceNotFoundException;
@@ -46,6 +45,19 @@ public class GlobalExceptionHandler {
         ApiResponse response = new ApiResponse(false, ex.getMessage());
         return  ResponseEntity.status(HttpStatus.SC_CONFLICT).body(response);
     }
+    
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse> handleAlreadyExists(IllegalArgumentException ex) {
+        ApiResponse response = new ApiResponse(false, ex.getMessage());
+        return  ResponseEntity.status(HttpStatus.SC_CONFLICT).body(response);
+    }
+    
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiResponse> handleAlreadyExists(DataIntegrityViolationException ex) {
+        ApiResponse response = new ApiResponse(false, ex.getMessage());
+        return  ResponseEntity.status(HttpStatus.SC_CONFLICT).body(response);
+    }
+    
     
     
     

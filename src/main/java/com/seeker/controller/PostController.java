@@ -1,9 +1,11 @@
 package com.seeker.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.seeker.dtos.ApiResponse;
@@ -31,6 +33,8 @@ public class PostController {
 		return ResponseEntity.ok().body(new ApiResponse(true,response));
 	}
 	
-//	@GetMapping("/getByUser")
-//	public ResponseEntity<?>
+	@GetMapping("/getByUser")
+	public ResponseEntity<?> getAllPostByUserId(@RequestParam Long userId){
+		return ResponseEntity.ok().body(postService.getAllPostsWithLikeStatusForCurrentUser(userId));
+	}
 }

@@ -29,20 +29,20 @@ public class Post extends BaseEntity {
 	@Column(name = "like_count", nullable = false)
 	private int likeCount = 0; // default 0
 
-	// Unidirectional Realtionship
-	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Like> likes = new ArrayList<>();
-
-	// Helper methods for maintaining the relationship
-	public void addLike(Like like) {
-		likes.add(like);
-		like.setPost(this);
-		this.likeCount = likes.size(); // keep likeCount in sync
-	}
-
-	public void removeLike(Like like) {
-		likes.remove(like);
-		like.setPost(null);
-		this.likeCount = likes.size(); // keep likeCount in sync
-	}
+//	// Unidirectional Realtionship
+//	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+//	private List<Like> likes = new ArrayList<>();
+//
+//	// Helper methods for maintaining the relationship
+//	public void addLike(Like like) {
+//		likes.add(like);
+//		like.setPost(this);
+//		this.likeCount = likes.size(); // keep likeCount in sync
+//	}
+//
+//	public void removeLike(Like like) {
+//		likes.remove(like);
+//		like.setPost(null);
+//		this.likeCount = likes.size(); // keep likeCount in sync
+//	}
 }

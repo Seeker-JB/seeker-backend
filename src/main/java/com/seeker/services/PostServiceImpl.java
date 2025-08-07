@@ -1,12 +1,17 @@
 package com.seeker.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.seeker.OwnExceptions.ResourceNotFoundException;
+import com.seeker.dao.LikeDao;
 import com.seeker.dao.PostDao;
 import com.seeker.dtos.PostRequestDto;
+import com.seeker.dtos.PostResponseDto;
 import com.seeker.models.Post;
 import com.seeker.models.UserEntity;
 import com.seeker.security.AuthenticatedUserProvider;
@@ -20,6 +25,7 @@ import lombok.AllArgsConstructor;
 public class PostServiceImpl implements PostService {
 
 	private PostDao postDao;
+	private LikeDao likeDao;
 	private AuthenticatedUserProvider securityContextUserProvider;
 	private ModelMapper modelMapper;
 	private CloudinaryImageServiceImpl cloudinary;
@@ -41,7 +47,7 @@ public class PostServiceImpl implements PostService {
 		post.setMediaUrl(url);
 
 		postDao.save(post);
-		return "Posted Successfull";
+		return "Poste'd Successfull";
 
 	}
 
@@ -61,8 +67,31 @@ public class PostServiceImpl implements PostService {
 
 		post.setMediaUrl(url);
 
-		postDao.save(post);  // no need of doing this this can me automaticly done by @Transactional
+		postDao.save(post); // no need of doing this this can me automaticly done by @Transactional
 		return "Posted Successfull";
 
 	}
+	
+	public List<PostResponseDto> getAllPostsWithLikeStatusForCurrentUser(Long userId) {
+	    UserEntity currentUser = securityContextUserProvider.getCurrentUser();
+
+	    List<Post> posts = postDao.findByUser_Id(userId);
+
+	    List<PostResponseDto> responseList = new ArrayList<>();
+
+	    for (Post post : posts) {
+	    	
+	        PostResponseDto dto = modelMapper.map(post, PostResponseDto.class);
+	        
+	        boolean liked = likeDao.existsByUserAndPost(currentUser, post);
+	        dto.setLikedByCurrentUser(liked);
+
+	        responseList.add(dto);
+	    }
+
+	    return responseList;
+	}
+
+
+
 }

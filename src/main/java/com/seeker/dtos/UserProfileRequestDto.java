@@ -5,7 +5,12 @@ import java.time.LocalDate;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.seeker.enums.Role;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
@@ -19,34 +24,41 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserProfileRequestDto {
 
-	    @NotBlank(message = "Full name is required")
-	    @Size(min = 2, max = 100)
-	    private String fullName;
+	@NotBlank(message = "Contact email is required")
+	@Email(message = "Invalid email format")
+	private String email;
 
-	    @NotBlank(message = "Gender is required")
-	    private String gender;
+	@NotBlank(message = "Password is Required")
+	private String password;
 
-	    @NotBlank(message = "Phone number is required")
-	    @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be 10 digits")
-	    private String phone;
+	@NotBlank(message = "Role is Required")
+	@Enumerated(EnumType.STRING)
+	private Role role;
 
-	    @Past(message = "Date of birth must be in the past")
-	    private LocalDate dob;
+	@NotBlank(message = "Full name is required")
+	@Size(min = 2, max = 100)
+	private String name;
 
-	    @NotBlank(message = "City is required")
-	    private String city;
+	@NotBlank(message = "Gender is required")
+	private String gender;
 
-	    @NotBlank(message = "State is required")
-	    private String state;
+	@Past(message = "Date of birth must be in the past")
+	private LocalDate dob;
 
-	    @NotBlank(message = "Country is required")
-	    private String country;
+	@NotBlank(message = "City is required")
+	private String city;
 
-	    @URL(message = "Invalid LinkedIn URL")
-	    private String linkedinUrl;
+	@NotBlank(message = "State is required")
+	private String state;
 
-	    @URL(message = "Invalid GitHub URL")
-	    private String githubUrl;
+	@NotBlank(message = "Country is required")
+	private String country;
 
-	    private MultipartFile profilePicture;
+	@URL(message = "Invalid LinkedIn URL")
+	private String linkedinUrl;
+
+	@URL(message = "Invalid GitHub URL")
+	private String githubUrl;
+
+	private MultipartFile profilePicture;
 }
