@@ -15,7 +15,7 @@ public class LikeController {
 
 	private LikeServiceImpl likeService;
 	
-	@PostMapping("/like-dislike")
+	@PostMapping("/like-dislike/{postId}")
 	public ResponseEntity<?> likeDislike(@PathVariable Long postId){
 		String response = likeService.doLikeDislike(postId);
 		return ResponseEntity.ok().body(new ApiResponse(true,response));

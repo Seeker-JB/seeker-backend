@@ -36,13 +36,13 @@ public class PostController {
 		return ResponseEntity.ok().body(new ApiResponse(true,response));
 	}
 	
-	@GetMapping("/getPost")
+	@GetMapping("/getPost/{postId}")
 	public ResponseEntity<PostResponseDto> getPost(@PathVariable Long postId){
 		PostResponseDto response = postService.getPost(postId);
 		return ResponseEntity.ok().body(response);
 	}
 	
-	@GetMapping("/getAllPostByUser")
+	@GetMapping("/getAllPostByUser/{postId}")
 	public ResponseEntity<?> getAllPostByUserId(@PathVariable  Long userId){
 		return ResponseEntity.ok().body(postService.getAllPostsWithLikeStatusForCurrentUser(userId));
 	}
