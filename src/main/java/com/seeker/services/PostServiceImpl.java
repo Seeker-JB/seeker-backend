@@ -71,27 +71,32 @@ public class PostServiceImpl implements PostService {
 		return "Posted Successfull";
 
 	}
-	
-	public List<PostResponseDto> getAllPostsWithLikeStatusForCurrentUser(Long userId) {
-	    UserEntity currentUser = securityContextUserProvider.getCurrentUser();
 
-	    List<Post> posts = postDao.findByUser_Id(userId);
-
-	    List<PostResponseDto> responseList = new ArrayList<>();
-
-	    for (Post post : posts) {
-	    	
-	        PostResponseDto dto = modelMapper.map(post, PostResponseDto.class);
-	        
-	        boolean liked = likeDao.existsByUserAndPost(currentUser, post);
-	        dto.setLikedByCurrentUser(liked);
-
-	        responseList.add(dto);
-	    }
-
-	    return responseList;
+	public PostResponseDto getPost(Long postId) {
+		Post post = postDao.findById(postId)
+				.orElseThrow(() -> new ResourceNotFoundException("Cannot find post"));
+		
+		return modelMapper.map(post, PostResponseDto.class);
 	}
 
+	public List<PostResponseDto> getAllPostsWithLikeStatusForCurrentUser(Long userId) {
+		UserEntity currentUser = securityContextUserProvider.getCurrentUser();
 
+		List<Post> posts = postDao.findByUser_Id(userId);
+
+		List<PostResponseDto> responseList = new ArrayList<>();
+
+		for (Post post : posts) {
+
+			PostResponseDto dto = modelMapper.map(post, PostResponseDto.class);
+
+			boolean liked = likeDao.existsByUserAndPost(currentUser, post);
+			dto.setLikedByCurrentUser(liked);
+
+			responseList.add(dto);
+		}
+
+		return responseList;
+	}
 
 }

@@ -7,13 +7,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.seeker.enums.Role;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,7 +30,7 @@ public class UserProfileRequestDto {
 	@NotBlank(message = "Password is Required")
 	private String password;
 
-	@NotBlank(message = "Role is Required")
+	@NotNull(message = "Role must not be null")
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
@@ -39,6 +38,10 @@ public class UserProfileRequestDto {
 	@Size(min = 2, max = 100)
 	private String name;
 
+	@NotBlank(message = "Description is required")
+	@Size(max = 1000, message = "Description too long")
+	private String description;
+	
 	@NotBlank(message = "Gender is required")
 	private String gender;
 

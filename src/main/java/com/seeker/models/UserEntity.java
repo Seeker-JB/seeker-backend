@@ -71,7 +71,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
 	@Column(name = "website", nullable = true, length = 255)
 	private String website;
 
-	@Column(name = "profile_picture_url", length = 500, nullable = false)
+	@Column(name = "profile_picture_url", length = 500, nullable = true)
 	private String profilePictureUrl;
 
 	// ---------- UserDetails methods ----------
