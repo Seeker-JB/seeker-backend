@@ -8,7 +8,7 @@ Seeker is a web platform where 🎓 job seekers build portfolios and apply for j
 - 👤 Create User & Business Profiles
 - 📄 Build Portfolios (with templates)
 - 💼 Post & Manage Jobs
-- 📥 Apply to Jobs, ❤️ Like & 💬 Comment on posts
+- 📥 Apply to Jobs, ❤️ Like on posts
 - 🛡️ Admin panel for managing everything
 
 🛠 Tech Stack
