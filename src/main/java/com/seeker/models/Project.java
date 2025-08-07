@@ -28,13 +28,9 @@ public class Project extends BaseEntity {
     private String techStack;
 
     @Column(name = "project_url", nullable = false, length = 300)
-    @NotBlank(message = "Project URL is required")
     @Size(max = 300, message = "Project URL too long")
     private String projectUrl;
 
-    @Column(name = "role", nullable = false, length = 255)
-    @NotBlank(message = "Role in project is required")
-    private String role;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)  // foreign key column

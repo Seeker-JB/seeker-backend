@@ -9,5 +9,7 @@ import com.seeker.models.UserEntity;
 public interface UserDao extends JpaRepository<UserEntity,Long>{
 	
 	public Optional<UserEntity> findByEmail(String email);
+	
+	
 
 }
