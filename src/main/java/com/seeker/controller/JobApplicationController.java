@@ -4,45 +4,54 @@ import com.seeker.dtos.JobApplicationRequestDTO;
 import com.seeker.dtos.JobApplicationResponseDTO;
 import com.seeker.services.JobApplicationService;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/seeker/applications")
 @RequiredArgsConstructor
-@RequestMapping("/job-posts")
 public class JobApplicationController {
 
-    private final JobApplicationService jobApplicationService;
+	private final JobApplicationService jobApplicationService;
 
-    // ✅ 1. Apply to a Job Post (Job Seeker)
-    @PostMapping("/{jobPostId}/applications")
-    public ResponseEntity<JobApplicationResponseDTO> applyForJob(
-            @PathVariable Long jobPostId,
-            @Valid @ModelAttribute JobApplicationRequestDTO dto) {
-        JobApplicationResponseDTO response = jobApplicationService.applyToJob(jobPostId, dto);
-        return ResponseEntity.ok(response);
-    }
+	// ------------------------
+	// 🎯 Applicant Endpoints
+	// ------------------------
 
-    // ✅ 2. Get all applications made by current authenticated user
-//    @GetMapping("/applications/my")
-//    public ResponseEntity<List<JobApplicationResponseDTO>> getMyApplications() {
-//        return ResponseEntity.ok(jobApplicationService.getApplicationsByCurrentUser());
-//    }
+	// ✅ Apply to a job
+	@PostMapping("/apply/{jobPostId}")
+	public ResponseEntity<JobApplicationResponseDTO> applyToJob(@PathVariable Long jobPostId,
+			@ModelAttribute JobApplicationRequestDTO dto
+	) {
+		JobApplicationResponseDTO response = jobApplicationService.applyToJob(jobPostId, dto);
+		return ResponseEntity.ok(response);
+	}
 
-    // ✅ 3. Get all applications for a specific job post (Business User)
-    @GetMapping("/{jobPostId}/applications")
-    public ResponseEntity<List<JobApplicationResponseDTO>> getApplicationsForJobPost(
-            @PathVariable Long jobPostId) {
-        return ResponseEntity.ok(jobApplicationService.getApplicationsForJobPost(jobPostId));
-    }
-    
-    
-    
-    
-    
+	// ------------------------
+	// 🧑‍💼 Business Endpoints
+	// ------------------------
+
+	// ✅ View a single application by ID (optional use)
+	@GetMapping("/{id}")
+	public ResponseEntity<JobApplicationResponseDTO> getApplicationById(@PathVariable Long id) {
+		JobApplicationResponseDTO response = jobApplicationService.getByApplicationId(id);
+		return ResponseEntity.ok(response);
+	}
+
+	// ✅ Get all applications for a job post (owned by business)
+	@GetMapping("/jobpost/{jobPostId}")
+	public ResponseEntity<List<JobApplicationResponseDTO>> getApplicationsForJobPost(@PathVariable Long jobPostId) {
+		List<JobApplicationResponseDTO> responses = jobApplicationService.getApplicationsForJobPost(jobPostId);
+		return ResponseEntity.ok(responses);
+	}
+
+	// ✅ Delete an application (business only)
+	@DeleteMapping("/{applicationId}")
+	public ResponseEntity<Void> deleteApplicationByBusiness(@PathVariable Long applicationId) {
+		jobApplicationService.deleteApplicationByBusiness(applicationId);
+		return ResponseEntity.noContent().build();
+	}
 }

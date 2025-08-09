@@ -74,12 +74,12 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 	public List<JobApplicationResponseDTO> getApplicationsForJobPost(Long jobPostId) {
 		UserEntity currentUser = aup.getCurrentUser();
 
-		JobPost jobPost = jobPostDao.findById(jobPostId).orElseThrow(() -> new RuntimeException("Job post not found"));
+		JobPost jobPost = jobPostDao.findById(jobPostId).orElseThrow(() -> new ResourceNotFoundException("Job post not found"));
 
 		// check if current user is the owner of the job post
 		if (!jobPost.getUser().getId().equals(currentUser.getId())) {
 			throw new UnauthorizedException("Unauthorized access to job applications");
-		}
+		}		
 
 		List<JobApplication> applications = jobApplicationDao.findByJobPostId(jobPostId);
 
