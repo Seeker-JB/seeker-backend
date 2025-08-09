@@ -16,4 +16,6 @@ public class JwtResponseDto {
 	private String jwtToken;
 	
 	private String email;
+	
+	private int portfolioType;
 }

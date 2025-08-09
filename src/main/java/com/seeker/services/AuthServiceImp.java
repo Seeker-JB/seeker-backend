@@ -121,7 +121,7 @@ public class AuthServiceImp implements AuthService {
 	}
 
 	@Override
-	public String deleteBusinessProfileByUser() {
+	public String deleteProfile() {
 
 		UserEntity user = securityContextUserProvider.getCurrentUser();
 

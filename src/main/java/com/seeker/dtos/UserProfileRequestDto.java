@@ -63,5 +63,8 @@ public class UserProfileRequestDto {
 	@URL(message = "Invalid GitHub URL")
 	private String githubUrl;
 
+	@NotBlank(message = "Select portfolio")
+	private int portfolio;
+	
 	private MultipartFile profilePicture;
 }

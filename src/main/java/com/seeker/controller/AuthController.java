@@ -2,7 +2,6 @@ package com.seeker.controller;
 
 import org.apache.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,6 +18,7 @@ import com.seeker.dtos.JwtRequestDto;
 import com.seeker.dtos.JwtResponseDto;
 import com.seeker.dtos.UserProfileRequestDto;
 import com.seeker.dtos.UserProfileUpdateDto;
+import com.seeker.models.UserEntity;
 import com.seeker.security.JwtHelper;
 import com.seeker.services.AuthServiceImp;
 
@@ -41,10 +41,10 @@ public class AuthController {
 		
 		authservice.doauthenticate(request.getEmail(), request.getPassword());
 
-		UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
+		UserEntity userDetails =(UserEntity)userDetailsService.loadUserByUsername(request.getEmail());
 		String token = jwtHelper.generateToken(userDetails);
 
-		JwtResponseDto response = JwtResponseDto.builder().jwtToken(token).email(userDetails.getUsername()).success(true).build();
+		JwtResponseDto response = JwtResponseDto.builder().jwtToken(token).email(userDetails.getUsername()).portfolioType(userDetails.getPortfolio()).success(true).build();
 
 		return ResponseEntity.ok(response);
 	}
@@ -57,7 +57,7 @@ public class AuthController {
 		return ResponseEntity.status(HttpStatus.SC_CREATED).body(new ApiResponse(true , response));
 	}
 
-	@PutMapping("/business-profile/update")
+	@PutMapping("/business-profile")
 	public ResponseEntity<?> updateBusinessProfile(@Valid @ModelAttribute BusinessProfileUpdateDto dto) {
 
 		authservice.updateBusinessProfile(dto); // or user.getId() if needed
@@ -78,10 +78,10 @@ public class AuthController {
 		return ResponseEntity.ok(new ApiResponse(true, response));
 	}
 	
-	@DeleteMapping("/business-profile")
-	public ResponseEntity<?> deleteBusinessProfile() {
+	@DeleteMapping("/delete-profile")
+	public ResponseEntity<?> deleteProfile() {
 
-		String response = authservice.deleteBusinessProfileByUser();
+		String response = authservice.deleteProfile();
 
 		return ResponseEntity.ok(new ApiResponse(true, response));
 	}

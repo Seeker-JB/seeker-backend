@@ -71,6 +71,9 @@ public class UserEntity extends BaseEntity implements UserDetails {
 	@Column(name = "website", nullable = true, length = 255)
 	private String website;
 
+	@Column(name = "protfolio_type", nullable = true)
+	private int portfolio;
+	
 	@Column(name = "profile_picture_url", length = 500, nullable = true)
 	private String profilePictureUrl;
 

@@ -56,5 +56,8 @@ public class UserProfileUpdateDto {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
+	@NotBlank(message = "Select portfolio")
+	private int portfolio;
+	
 	private MultipartFile profilePicture;
 }

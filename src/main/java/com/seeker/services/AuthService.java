@@ -17,6 +17,6 @@ public interface AuthService {
 	public String updateUserProfile(UserProfileUpdateDto userDto);
 	
 	public void encodePassword(UserEntity user, String password);
-	public String deleteBusinessProfileByUser();
+	public String deleteProfile();
 	
 }
