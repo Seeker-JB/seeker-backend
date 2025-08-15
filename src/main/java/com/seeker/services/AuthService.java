@@ -11,9 +11,11 @@ public interface AuthService {
 	public void doauthenticate(String email, String password);
 	
 	public String addBusinessProfile(BusinessProfileRequestDTO dto);
+	public BusinessProfileUpdateDto getSingleBusiness();
 	public String updateBusinessProfile(BusinessProfileUpdateDto dto);
 	
 	public String createUserProfile(UserProfileRequestDto userDto);
+	public UserProfileUpdateDto getSingleUser();
 	public String updateUserProfile(UserProfileUpdateDto userDto);
 	
 	public void encodePassword(UserEntity user, String password);

@@ -43,7 +43,7 @@ public class PostController {
 		return ResponseEntity.ok().body(response);
 	}
 	
-	@GetMapping("/getAllPostByUser/{postId}")
+	@GetMapping("/getAllPostByUser/{userId}")
 	public ResponseEntity<?> getAllPostByUserId(@PathVariable Long userId){
 		return ResponseEntity.ok().body(postService.getAllPostsWithLikeStatusForCurrentUser(userId));
 	}

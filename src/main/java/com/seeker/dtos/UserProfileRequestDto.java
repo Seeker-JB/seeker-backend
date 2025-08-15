@@ -10,6 +10,8 @@ import com.seeker.enums.Role;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -63,8 +65,11 @@ public class UserProfileRequestDto {
 	@URL(message = "Invalid GitHub URL")
 	private String githubUrl;
 
-	@NotBlank(message = "Select portfolio")
-	private int portfolio;
+	@NotNull(message = "Select portfolio")
+	@Min(value = 1, message = "Select portfolio")
+	@Max(value = 3, message = "Portfolio cannot be more than 3")
+	private Integer portfolio;
+
 	
 	private MultipartFile profilePicture;
 }

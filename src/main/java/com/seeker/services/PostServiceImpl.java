@@ -83,39 +83,55 @@ public class PostServiceImpl implements PostService {
 
 		return modelMapper.map(post, PostResponseDto.class);
 	}
-	
-	//important  ye tb kam aai ga jb koi user open kre ga kisi profile ke post
+
+	// important ye tb kam aai ga jb koi user open kre ga kisi profile ke post
 	public List<PostResponseDto> getAllPostsWithLikeStatusForCurrentUser(Long userId) {
-		UserEntity currentUser = securityContextUserProvider.getCurrentUser();
 
 		List<Post> posts = postDao.findByUser_Id(userId);
 
 		List<PostResponseDto> responseList = new ArrayList<>();
 
-		for (Post post : posts) {
+		try {
 
-			PostResponseDto dto = modelMapper.map(post, PostResponseDto.class);
+			UserEntity currentUser = securityContextUserProvider.getCurrentUser();
 
-			boolean liked = likeDao.existsByUserAndPost(currentUser, post);
-			dto.setLikedByCurrentUser(liked);
+			for (Post post : posts) {
 
-			responseList.add(dto);
+				PostResponseDto dto = modelMapper.map(post, PostResponseDto.class);
+
+				boolean liked = likeDao.existsByUserAndPost(currentUser, post);
+				dto.setLikedByCurrentUser(liked);
+
+				responseList.add(dto);
+			}
+
+			return responseList;
+
+		} catch (Exception e) {
+
+			for (Post post : posts) {
+
+				PostResponseDto dto = modelMapper.map(post, PostResponseDto.class);
+
+				responseList.add(dto);
+			}
+
+			return responseList;
 		}
 
-		return responseList;
 	}
-	
+
 	public String deletePost(Long postId) {
-		
+
 		Post post = postDao.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Cannot find post"));
-		
+
 		UserEntity currentUser = securityContextUserProvider.getCurrentUser();
 		if (!post.getUser().getId().equals(currentUser.getId())) {
 			throw new UnauthorizedException("You are not allowed to update this job post");
 		}
-		
+
 		postDao.delete(post);
-		
+
 		return "Detele successfull";
 	}
 

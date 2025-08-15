@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.seeker.dtos.ApiResponse;
 import com.seeker.services.LikeServiceImpl;
 
+import lombok.AllArgsConstructor;
+
 @RestController
 @RequestMapping("/like")
+@AllArgsConstructor
 public class LikeController {
 
 	private LikeServiceImpl likeService;

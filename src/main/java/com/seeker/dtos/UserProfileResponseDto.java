@@ -27,7 +27,7 @@ public class UserProfileResponseDto {
     private String gender;
     private String linkedinUrl;
     private String githubUrl;
-    private String website;
+    private Integer portfolio;
 
     private List<ProjectResponseDto> projects;
     private List<EducationQualificationResponseDto> education;

@@ -66,6 +66,12 @@ public class AuthServiceImp implements AuthService {
 		return "Created Successfull";
 
 	}
+	
+	@Override
+	public BusinessProfileUpdateDto getSingleBusiness() {
+		UserEntity user = securityContextUserProvider.getCurrentUser();
+		return modelMapper.map(user, BusinessProfileUpdateDto.class);
+	}
 
 	@Override
 	public String updateBusinessProfile(BusinessProfileUpdateDto dto) {
@@ -87,6 +93,7 @@ public class AuthServiceImp implements AuthService {
 		return "Update Successfull";
 	}
 
+	@Override
 	public String createUserProfile(UserProfileRequestDto userDto) {
 
 		UserEntity userProfile = modelMapper.map(userDto, UserEntity.class);
@@ -101,6 +108,13 @@ public class AuthServiceImp implements AuthService {
 
 	}
 
+	@Override
+	public UserProfileUpdateDto getSingleUser() {
+		UserEntity user = securityContextUserProvider.getCurrentUser();
+		return modelMapper.map(user, UserProfileUpdateDto.class);
+	}
+	
+	@Override
 	public String updateUserProfile(UserProfileUpdateDto userDto) {
 		UserEntity existingUser = securityContextUserProvider.getCurrentUser();
 
@@ -114,8 +128,7 @@ public class AuthServiceImp implements AuthService {
 			existingUser.setProfilePictureUrl(uploadedUrl);
 		}
 
-		UserEntity saved = userDao.save(existingUser);
-
+		userDao.save(existingUser);
 		return "Profile updated with id";
 
 	}
@@ -131,6 +144,7 @@ public class AuthServiceImp implements AuthService {
 
 	}
 
+	@Override
 	public void encodePassword(UserEntity user, String password) {
 
 		String encodedPassword = passwordEncoder.encode(password);

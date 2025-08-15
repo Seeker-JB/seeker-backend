@@ -4,6 +4,7 @@ import org.apache.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -44,7 +45,7 @@ public class AuthController {
 		UserEntity userDetails =(UserEntity)userDetailsService.loadUserByUsername(request.getEmail());
 		String token = jwtHelper.generateToken(userDetails);
 
-		JwtResponseDto response = JwtResponseDto.builder().jwtToken(token).email(userDetails.getUsername()).portfolioType(userDetails.getPortfolio()).success(true).build();
+		JwtResponseDto response = JwtResponseDto.builder().jwtToken(token).email(userDetails.getUsername()).portfolioType(userDetails.getPortfolio()).role(userDetails.getRole().toString()).id(userDetails.getId()).success(true).build();
 
 		return ResponseEntity.ok(response);
 	}
@@ -55,6 +56,14 @@ public class AuthController {
 		String response = authservice.addBusinessProfile(dto);
 
 		return ResponseEntity.status(HttpStatus.SC_CREATED).body(new ApiResponse(true , response));
+	}
+	
+	@GetMapping("/getSingleBusiness")
+	public ResponseEntity<?> getSingleBusiness() {
+
+		BusinessProfileUpdateDto response = authservice.getSingleBusiness(); 
+
+		return ResponseEntity.ok(response);
 	}
 
 	@PutMapping("/business-profile")
@@ -68,6 +77,14 @@ public class AuthController {
 	@PostMapping("/user-profile")
 	public ResponseEntity<?> createUserProfile(@Valid @ModelAttribute UserProfileRequestDto user){
 		return ResponseEntity.ok().body(new ApiResponse(true,authservice.createUserProfile(user)));
+	}
+	
+	@GetMapping("/getSingleUser")
+	public ResponseEntity<?> getSingleUser() {
+
+		UserProfileUpdateDto response = authservice.getSingleUser(); 
+
+		return ResponseEntity.ok(response);
 	}
 	
 	@PutMapping("/user-profile")

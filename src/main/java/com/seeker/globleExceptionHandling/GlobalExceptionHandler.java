@@ -90,9 +90,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse> handleGlobalException(Exception ex) {
+    	System.out.println("in exception ---------------------------------------------");
         ex.printStackTrace(); // Optional: log error for debugging
         return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
-                             .body(new ApiResponse(false, "Something went wrong"));
+                             .body(new ApiResponse(false, ex.getMessage()));
     }
     
     

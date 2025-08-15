@@ -3,6 +3,7 @@ package com.seeker.services;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.seeker.dtos.BusinessProfileResponseDto;
 import com.seeker.dtos.UserProfileResponseDto;
 import com.seeker.models.UserEntity;
 
@@ -36,9 +37,9 @@ public class ProfileServiceImpl implements ProfileService {
 	}
 
 	@Override
-	public UserProfileResponseDto getBusinessProfile(UserEntity user) {
+	public BusinessProfileResponseDto getBusinessProfile(UserEntity user) {
 		
-		return modelMapper.map(user, UserProfileResponseDto.class);
+		return modelMapper.map(user, BusinessProfileResponseDto.class);
 	}
 
 }
